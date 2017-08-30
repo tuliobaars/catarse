@@ -1,77 +1,82 @@
 source 'https://rubygems.org'
 
-ruby '2.2.2'
+ruby '2.4.1'
 
-gem 'rails', '~> 4.1.6'
+gem 'rails', '~> 4.2.8'
 
-#gem 'catarse_api', path: '~/code/catarse_api'
-gem 'catarse_api', github: 'catarse/catarse_api'
 gem 'protected_attributes'
 gem 'rails-observers'
 gem 'rb-readline'
 
-gem 'sidekiq',  '~> 3.1.3'
+gem 'sidekiq',  '~> 4.0.1'
 
 # Turns every field on a editable one
-gem "best_in_place", :git => "git://github.com/bernat/best_in_place", ref: "ee95961e639022e6aa528704b8cb4789596ea61b"
+gem "best_in_place"
 
 # State machine for attributes on models
-gem 'state_machine', require: 'state_machine/core'
+# @TODO move payment to statesman
+gem 'state_machines-activerecord'
+gem 'statesman'
 
 # Database and data related
-gem 'pg', '0.17.1'
-gem 'dbhero', '>= 1.1.8'
+gem 'pg', '0.19.0'
+gem 'dbhero', '>= 1.1.12'
 gem 'postgres-copy'
+gem 'postgres_ext'
 gem 'pg_search'
 gem 'i18n_alchemy'
+gem "i18n-js", ">= 3.0.0.rc11"
+gem 'whenever'
 
 gem 'schema_plus'
-gem 'chartkick'
-gem 'catarse_settings_db', '>= 0.1.0'
+gem 'catarse_settings_db', '>= 0.2.0'
 
 # Notifications
-gem 'user_notifier', '~> 0.0.5'
+gem 'user_notifier', '~> 0.4.0'
 
 # Mixpanel for backend tracking
 gem 'mixpanel-ruby'
 gem 'mixpanel_client'
 
 # Payment engines
-gem 'catarse_moip', '~> 3.2.0'
-gem 'catarse_pagarme', '2.7'
+
+gem 'catarse_pagarme', '~> 2.10.13'
 #gem 'catarse_pagarme', path: '../catarse_pagarme'
 
 # Decorators
 gem 'draper'
+gem "sentry-raven"
 
 # Frontend stuff
 gem 'slim-rails'
-gem 'browser'
+gem 'browser', "1.0.1"
 gem "cocoon"
 
 # Static pages
 gem 'high_voltage'
 
 # Authentication and Authorization
+gem 'simple_token_authentication', '~> 1.0' # see semver.org
 gem 'omniauth'
-gem 'omniauth-twitter'
 gem 'omniauth-facebook'
-gem 'devise'
-gem 'ezcrypto'
+gem 'koala'
+gem 'devise', '3.5.10'
 gem 'pundit'
+gem 'json_web_token'
 
 # Email marketing
-gem 'catarse_monkeymail', '>= 0.1.6'
+gem 'gridhook'
+gem 'sendgrid-ruby'
 
 # HTML manipulation and formatting
 gem 'simple_form'
 gem 'mail_form'
-gem "auto_html"
+gem "auto_html", "~> 1.6"
 gem 'kaminari'
-gem 'redactor-rails', github: 'catarse/redactor-rails'
+gem 'redactor-rails', github: 'catarse/redactor-rails', branch: 'master'
 
 # Uploads
-gem 'carrierwave', '~> 0.10.0'
+gem 'carrierwave', github: 'carrierwaveuploader/carrierwave', ref: '1578777fe3f30140347ebf27d1943471bbe4d425'
 gem "mini_magick"
 
 # Other Tools
@@ -79,22 +84,24 @@ gem 'to_xls'
 gem 'ranked-model'
 gem 'feedjira'
 gem 'inherited_resources'
-gem 'has_scope', '>= 0.6.0.rc'
+gem 'has_scope'
 gem 'spectator-validates_email',  require: 'validates_email'
-gem 'video_info', '>= 1.1.1'
-gem 'httparty', '~> 0.6.1' # this version is required by moip gem, otherwise payment confirmation will break
+gem 'video_info'
+gem 'typhoeus'
+gem 'parallel'
+gem 'sitemap_generator'
+gem 'rdstation-ruby-client'
+gem 'responders', '~> 2.0'
+gem "cpf_cnpj"
+gem 'aws-sdk', '~> 2'
 
 # Translations
 gem 'http_accept_language'
-gem 'routing-filter', '~> 0.4.0.pre'
-
-# Payment
-gem 'moip', github: 'catarse/moip-ruby', ref: 'c0225ad71645cd1df35dafa1e45c9f092b3abb9e'
-gem 'httpclient',     '>= 2.2.5'
+gem 'routing-filter', '~> 0.6.0'
 
 group :production do
   # Gem used to handle image uploading
-  gem 'fog', '>= 1.3.1'
+  gem 'fog-aws'
 
   # Workers, forks and all that jazz
   gem 'unicorn'
@@ -108,7 +115,9 @@ group :production do
   gem 'rails_12factor'
 
   # Monitoring with the new new relic
-  gem 'newrelic_rpm'
+  gem 'newrelic_rpm', '~> 3.18.1.330'
+
+  gem "activerecord-nulldb-adapter"
 
   # Using dalli and memcachier have not presented significative performance gains
   # Probably this is due to our pattern of cache usage
@@ -117,6 +126,7 @@ group :production do
   #gem 'dalli'
 end
 group :development do
+  gem 'web-console'
   gem "rails-erd"
   gem "letter_opener"
   gem 'foreman'
@@ -129,7 +139,7 @@ group :development do
 end
 
 group :test, :development do
-  gem 'rspec-rails', '~> 3.1'
+  gem 'rspec-rails'
   gem 'rspec-mocks'
   gem 'rspec-its'
   gem 'rspec-collection_matchers'
@@ -139,23 +149,20 @@ end
 
 group :test do
   gem 'zonebie'
-  gem 'fakeweb'
+  gem 'fakeweb', github: 'SamMolokanov/fakeweb', branch: 'ruby-2-4-1-support'
   gem 'poltergeist'
   gem 'launchy'
   gem 'database_cleaner'
   gem 'shoulda'
   gem 'factory_girl_rails'
-  gem 'capybara',   '~> 2.2.0'
+  gem 'capybara'
   gem 'selenium-webdriver'
 end
 
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'compass-rails'
 gem 'uglifier'
-gem 'compass-960-plugin'
 gem 'sprockets'
-
-# FIXME: Not-anymore-on-development
-# Gems that are with 1 or more years on the vacuum
-gem 'weekdays'
